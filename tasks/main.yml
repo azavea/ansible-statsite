@@ -1,0 +1,38 @@
+---
+- name: Create service account for Statsite
+  user: name=statsite
+        system=yes
+        home={{ statsite_data_dir }}
+        shell=/bin/false
+        state=present
+
+- name: Configure the PackageCloud APT key
+  apt_key: url=https://packagecloud.io/gpg.key state=present
+
+- name: Configure the PackageCloud APT repositories
+  apt_repository: repo="deb https://packagecloud.io/azavea/statsite/ubuntu/ {{ ansible_distribution_release }} main"
+                  state=present
+
+- name: Install Statsite
+  apt: pkg=statsite={{ statsite_version }} state=present
+
+- name: Configure Statsite
+  template: src=statsite.cfg.j2
+            dest=/etc/statsite/statsite.cfg
+  notify:
+    - Restart Statsite
+
+- name: Configure Statsite service definition
+  template: src=statsite.conf.j2 dest=/etc/init/statsite.conf
+  notify:
+    - Restart Statsite
+
+- name: Touch log file if it does not exist
+  command: touch {{ statsite_log }}
+           creates={{ statsite_log }}
+
+- name: Set log file permissions
+  file: path={{ statsite_log }} owner=statsite group=statsite mode=0644
+
+- name: Configure Statsite log rotation
+  template: src=logrotate_statsite.j2 dest=/etc/logrotate.d/statsite
