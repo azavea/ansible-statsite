@@ -1,0 +1,7 @@
+{{ statsite_log }} {
+  rotate {{ statsite_log_rotate_count }}
+  {{ statsite_log_rotate_interval }}
+  compress
+  missingok
+  notifempty
+}

@@ -1,0 +1,14 @@
+# statsite - a statsd reimplementation in C
+#
+# statsite is a metrics aggregation daemon
+
+description	"statsite is a metrics aggregation daemon"
+
+start on (local-filesystems and net-device-up IFACE!=lo)
+stop on shutdown
+
+respawn
+setuid statsite
+chdir {{ statsite_data_dir }}
+
+exec /usr/sbin/statsite -f /etc/statsite/statsite.cfg >> {{ statsite_log }} 2>&1
