@@ -1,5 +1,5 @@
 ---
-statsite_version: "0.6.5-1"
+statsite_version: "0.7.0-1"
 statsite_data_dir: "/var/lib/statsite"
 
 statsite_log: /var/log/statsite.log
