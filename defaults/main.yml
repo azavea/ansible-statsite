@@ -1,7 +1,10 @@
 ---
-statsite_version: "0.7.0-1"
+statsite_version: "0.7.1"
+statsite_conf_dir: "/etc/statsite"
+statsite_sink_dir: "/usr/libexec/statsite"
 statsite_data_dir: "/var/lib/statsite"
 statsite_flush_interval: 10
+statsite_stream_cmd: "python /usr/libexec/statsite/graphite.py localhost 2003"
 
 statsite_log: /var/log/statsite.log
 statsite_log_rotate_count: 5
