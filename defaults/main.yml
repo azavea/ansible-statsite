@@ -1,6 +1,7 @@
 ---
 statsite_version: "0.7.0-1"
 statsite_data_dir: "/var/lib/statsite"
+statsite_flush_interval: 10
 
 statsite_log: /var/log/statsite.log
 statsite_log_rotate_count: 5
