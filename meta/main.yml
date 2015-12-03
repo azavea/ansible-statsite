@@ -11,4 +11,6 @@ galaxy_info:
   categories:
   - system
   - monitoring
-dependencies: []
+dependencies:
+  - { role: "azavea.git" }
+  - { role: "azavea.pip" }

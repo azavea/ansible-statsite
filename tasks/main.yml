@@ -2,23 +2,53 @@
 - name: Create service account for Statsite
   user: name=statsite
         system=yes
-        home={{ statsite_data_dir }}
+        home="{{ statsite_data_dir }}"
         shell=/bin/false
         state=present
 
-- name: Configure the PackageCloud APT key
-  apt_key: url=https://packagecloud.io/gpg.key state=present
+- name: Ensure Statsite directories exist
+  file: path="{{ item }}"
+        state=directory
+  with_items:
+    - "{{ statsite_conf_dir }}"
+    - "{{ statsite_sink_dir }}"
 
-- name: Configure the PackageCloud APT repositories
-  apt_repository: repo="deb https://packagecloud.io/azavea/statsite/ubuntu/ {{ ansible_distribution_release }} main"
-                  state=present
+- name: Download Statsite
+  get_url: url="https://github.com/armon/statsite/archive/v{{ statsite_version }}.tar.gz"
+           dest="/usr/local/src/statsite-{{ statsite_version }}.tar.gz"
 
-- name: Install Statsite
-  apt: pkg=statsite={{ statsite_version }} state=present
+- name: Extract Statsite
+  unarchive: src="/usr/local/src/statsite-{{ statsite_version }}.tar.gz"
+             dest="/usr/local/src"
+             copy=no
+
+- name: Install SCons
+  pip: name="SCons"
+       extra_args="--egg"
+       state=present
+
+- name: Build Statsite
+  command: "make"
+  args:
+    chdir: "/usr/local/src/statsite-{{ statsite_version }}"
+    creates: "/usr/local/src/statsite-{{ statsite_version }}/statsite"
+  register: installed_statsite
+
+- name: Copy Statsite executables
+  command: "cp {{ item.src }} {{ item.dest }}"
+  when: installed_statsite|changed
+  with_items:
+    - { src: "/usr/local/src/statsite-{{ statsite_version }}/statsite", dest: "/usr/sbin" }
+    - { src: "/usr/local/src/statsite-{{ statsite_version }}/sinks/cloudwatch.sh", dest: "{{ statsite_sink_dir }}" }
+    - { src: "/usr/local/src/statsite-{{ statsite_version }}/sinks/graphite.py", dest: "{{ statsite_sink_dir }}" }
+    - { src: "/usr/local/src/statsite-{{ statsite_version }}/sinks/influxdb.py", dest: "{{ statsite_sink_dir }}" }
+    - { src: "/usr/local/src/statsite-{{ statsite_version }}/sinks/librato.py", dest: "{{ statsite_sink_dir }}" }
+  notify:
+    - Restart Statsite
 
 - name: Configure Statsite
   template: src=statsite.cfg.j2
-            dest=/etc/statsite/statsite.cfg
+            dest="{{ statsite_conf_dir }}/statsite.cfg"
   notify:
     - Restart Statsite
 
