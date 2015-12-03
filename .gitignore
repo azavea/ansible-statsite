@@ -1,1 +1,4 @@
 .vagrant
+
+examples/roles/azavea.git
+examples/roles/azavea.pip

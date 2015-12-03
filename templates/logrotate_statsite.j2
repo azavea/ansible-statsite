@@ -3,5 +3,8 @@
   {{ statsite_log_rotate_interval }}
   compress
   missingok
+  postrotate
+    restart statsite
+  endscript
   notifempty
 }

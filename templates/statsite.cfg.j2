@@ -5,7 +5,7 @@ log_level = INFO
 flush_interval = {{ statsite_flush_interval }}
 timer_eps = 0.01
 set_eps = 0.02
-stream_cmd = python /usr/libexec/statsite/graphite.py localhost 2003
+stream_cmd = {{ statsite_stream_cmd }}
 
 [histogram_api]
 prefix=api
