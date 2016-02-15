@@ -1,0 +1,4 @@
+- name: azavea.pip
+  version: 0.1.1
+- name: azavea.git
+  version: 0.1.0
