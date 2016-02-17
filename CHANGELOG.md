@@ -1,3 +1,8 @@
+## 1.1.0
+
+- Add backward compatible support with Ansible 2.0.
+- Ensure that example uses YAML role specification format.
+
 ## 1.0.0
 
 - Bump default version of Statsite to `0.7.1`.
