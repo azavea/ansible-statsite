@@ -1,4 +1,9 @@
 ---
 - hosts: all
+
+  pre_tasks:
+    - name: "Update APT Cache"
+      apt: update_cache=true
+
   roles:
     - { role: "azavea.statsite" }

@@ -24,7 +24,7 @@
 
 - name: Install SCons
   pip: name="SCons"
-       extra_args="--egg"
+       extra_args="--egg --install-option --standard-lib"
        state=present
 
 - name: Build Statsite
