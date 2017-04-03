@@ -1,3 +1,6 @@
+## 1.1.1
+-  Install dependencies to the standard python package directory.
+
 ## 1.1.0
 
 - Add backward compatible support with Ansible 2.0.
